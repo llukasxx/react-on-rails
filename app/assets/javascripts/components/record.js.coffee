@@ -12,6 +12,21 @@
       dataType: 'JSON'
       success: () =>
         @props.handleDeleteRecord @props.record
+  handleEdit: (e) ->
+    e.preventDefault()
+    data =
+      title: React.findDOMNode(@refs.title).value
+      date: React.findDOMNode(@refs.date).value
+      amount: React.findDOMNode(@refs.amount).value
+    $.ajax
+      method: 'PUT'
+      url: "/records/#{ @props.record.id }"
+      dataType: 'JSON'
+      data:
+        record: data
+      success: (data) =>
+        @setState edit: false
+        @props.handleEditRecord @props.record, data
   recordRow: ->
     React.DOM.tr null,
       React.DOM.td null, @props.record.date
