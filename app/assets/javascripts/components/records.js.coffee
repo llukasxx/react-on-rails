@@ -15,29 +15,32 @@
     records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
     @replaceState records: records
   render: ->
-    React.DOM.div
-      className: 'records'
-      React.DOM.h2
-        className: 'title'
-        'Records'
-      React.DOM.div
-        className: 'row'
-        React.createElement AmountBox, type: 'success', amount: @credits(), text: 'Credit'
-        React.createElement AmountBox, type: 'danger', amount: @debits(), text: 'Debit'
-        React.createElement AmountBox, type: 'info', amount: @balance(), text: 'Balance'
-      React.createElement RecordForm, handleNewRecord: @addRecord
-      React.DOM.hr null
-      React.DOM.table
-        className: 'table table-bordered'
-        React.DOM.thead null,
-          React.DOM.tr null,
-            React.DOM.th null, 'Date'
-            React.DOM.th null, 'Title'
-            React.DOM.th null, 'Amount'
-            React.DOM.th null, 'Actions'
-          React.DOM.tbody null,
+    <div className="records">
+      <h2 className="title">Records</h2>
+      <div className="row">
+        <AmountBox type="success" amount={@credits()} text="Credit"/>
+        <AmountBox type="danger" amount={@debits()} text="Debit"/>
+        <AmountBox type="info" amount={@balance()} text="Balance"/>
+      </div>
+      <RecordForm handleNewRecord={@addRecord} />
+      <hr />
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
             for record in @state.records
-              React.createElement Record, key: record.id, record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
+              <Record key={record.id} record={record} handleDeleteRecord={@deleteRecord} handleEditRecord={@updateRecord} />
+          }
+        </tbody>
+      </table>
+    </div>
   credits: ->
     credits = @state.records.filter (val) -> val.amount >= 0
     credits.reduce ((prev, curr) ->
